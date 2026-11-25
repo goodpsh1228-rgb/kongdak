@@ -95,3 +95,17 @@ describe('long pauses (dropped beats)', () => {
     expect(assessRhythm([0, 500, 1500, 2000]).pauses).toBe(0)
   })
 })
+
+describe('긴 멈춤을 포함하면 판정이 바뀌는 경우', () => {
+  it('박동 탈락(2도 방실차단 모양)이면 큰 BPM은 정상이어도 멈춤 포함 값은 서맥', () => {
+    // 0.8초 간격(75 BPM)에 1.6초 멈춤 3회
+    const taps = [0]
+    const gaps = [800, 800, 800, 1600, 800, 800, 800, 1600, 800, 800, 800, 1600, 800, 800]
+    for (const g of gaps) taps.push(taps[taps.length - 1] + g)
+    expect(bpmFromTaps(taps)).toBe(75)
+    const r = assessRhythm(taps)
+    expect(r.pauses).toBe(3)
+    expect(classify(bpmFromTaps(taps)!, DEFAULT_RANGES.dogStandard)).toBe('normal')
+    expect(classify(r.bpmWithPauses!, DEFAULT_RANGES.dogStandard)).toBe('brady')
+  })
+})

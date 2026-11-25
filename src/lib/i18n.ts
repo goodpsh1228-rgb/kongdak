@@ -53,7 +53,7 @@ const ko = {
   pauseReview: '긴 멈춤 (Pause)',
   pauseChip: '긴 멈춤',
   times: '회',
-  pauseBpmIfDropped: '박동 탈락이면',
+  pauseBpmIfDropped: '멈춤 포함 시',
   remeasure: '다시 측정',
   notSaved: '측정 결과는 저장되지 않아요.',
   normalMsg: '참고범위 안이에요. 다른 신체검사 소견과 함께 해석하세요.',

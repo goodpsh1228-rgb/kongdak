@@ -1838,3 +1838,24 @@ input.ios-num::-webkit-inner-spin-button {
 .measure .readout.timer .step {
   font-size: 27px;
 }
+
+/* 긴 멈춤을 포함하면 판정이 바뀔 때: 판정 묶음 바로 아래 경고 */
+.result .pause-alert {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fff0e8;
+  color: #c2410c;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+  word-break: keep-all;
+}
+.result .pause-alert.brady {
+  background: #eef2fd;
+  color: var(--brady);
+}
+.result .pause-alert strong {
+  font-weight: 800;
+}

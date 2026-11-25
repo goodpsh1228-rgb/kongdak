@@ -3,7 +3,7 @@ import { Pet, type PetHandle } from '../components/Pet'
 import { DisclaimerFooter, TopBar } from '../components/ui'
 import { guidanceFor, irregularGuidance, pauseGuidance, type GuidanceBlock } from '../lib/guidance'
 import { getDraft, moodFor } from '../lib/helpers'
-import { SOURCE_CITATION } from '../lib/ranges'
+import { classify, SOURCE_CITATION } from '../lib/ranges'
 import { MIN_INTERVALS_FOR_RHYTHM } from '../lib/rhythm'
 import { navigate } from '../lib/router'
 import { useL, useSettings } from '../lib/settings'
@@ -28,6 +28,11 @@ export function Result() {
   const g = guidanceFor(m.status, m.species)
   const rg = m.irregular ? irregularGuidance(m.species) : undefined
   const pg = m.pauses > 0 ? pauseGuidance() : undefined
+  // 큰 BPM은 긴 멈춤을 탭 누락으로 보고 뺀 값 → 멈춤이 실제 박동 탈락이면 판정이 달라질 수 있음 (예: 2도 방실차단의 서맥을 놓침)
+  const pauseStatus = m.bpmWithPauses !== undefined ? classify(m.bpmWithPauses, m.range) : undefined
+  const pauseShift = pauseStatus !== undefined && pauseStatus !== m.status ? pauseStatus : undefined
+  const pauseShiftText = pauseShift === 'brady' ? t.brady : pauseShift === 'tachy' ? t.tachy : t.normal
+  const pg2 = pauseShift && pauseShift !== 'normal' ? guidanceFor(pauseShift, m.species) : undefined
   const rhythmAssessable = m.taps.length - 1 >= MIN_INTERVALS_FOR_RHYTHM
   const statusText = m.status === 'brady' ? t.bradyFull : m.status === 'tachy' ? t.tachyFull : t.normal
 
@@ -58,6 +63,11 @@ export function Result() {
             {t.normalRangeShort} {m.range.min}–{m.range.max} {t.bpm}
           </span>
         </div>
+        {pauseShift && (
+          <p className={`pause-alert ${pauseShift}`}>
+            멈춤을 포함하면 {m.bpmWithPauses} {t.bpm}로 <strong>{pauseShiftText}</strong> 범위예요. 박동 탈락인지 청진 · ECG로 확인하세요.
+          </p>
+        )}
         </div>
 
         {/* ② 리듬 지표 묶음: 리듬 | 긴 멈춤 */}
@@ -98,6 +108,9 @@ export function Result() {
             <h2 className="group-label">검토 안내</h2>
             <div className="guide-list">
               {g && <GuidanceCard title={statusText} block={g} tone={m.status} />}
+              {pg2 && pauseShift && (
+                <GuidanceCard title={`${pauseShift === 'brady' ? t.bradyFull : t.tachyFull} 가능성`} block={pg2} tone={pauseShift} />
+              )}
               {rg && <GuidanceCard title={t.rhythmReview} block={rg} tone="warn" />}
               {pg && <GuidanceCard title={t.pauseReview} block={pg} tone="warn" />}
             </div>
