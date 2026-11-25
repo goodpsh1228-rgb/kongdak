@@ -1,0 +1,1840 @@
+:root {
+  --bg: #f4efe8;
+  --card: #fffdf9;
+  --ink: #2a2222;
+  --ink-soft: #8a7c74;
+  --line: #e8dfd4;
+  /* 주 버튼 · 강조 = 캐릭터 목줄의 남색 */
+  --accent: #1f2e44;
+  --accent-ink: #ffffff;
+  --brass: #f2c14e;
+  /* 상태 색 = 캐릭터 배경색 (lib/petArt.ts MOOD_BG와 같은 값) */
+  --idle: #a3968c;
+  --ok: #3fa68c;
+  --brady: #4c6fd6;
+  --tachy: #e8492f;
+  --warn: #e9a23b;
+  --warn-ink: #a9700c;
+  --radius: 22px;
+  --shadow: 0 6px 20px rgba(60, 30, 20, 0.07);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1716;
+    --card: #262020;
+    --ink: #f4ece4;
+    --ink-soft: #b9a89e;
+    --line: #3a302c;
+    --accent: #f2c14e;
+    --accent-ink: #1f2e44;
+    --warn-ink: #f0b54f;
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', system-ui, sans-serif;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+input,
+textarea {
+  font: inherit;
+  font-size: 16px; /* iOS 자동 확대 방지 */
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+}
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+.screen {
+  min-height: 100dvh;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  padding: calc(env(safe-area-inset-top) + 8px) 12px 8px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.topbar h1 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar-side.right {
+  display: flex;
+  justify-content: flex-end;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.icon-btn:active {
+  background: var(--line);
+}
+
+.content {
+  padding: 8px 16px 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  width: 100%;
+  text-align: left;
+}
+.card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.muted {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.tiny {
+  font-size: 12px;
+}
+.strong {
+  font-weight: 700;
+}
+.center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--line);
+  white-space: nowrap;
+}
+.chip.normal {
+  background: color-mix(in srgb, var(--ok) 18%, transparent);
+  color: var(--ok);
+}
+.chip.brady {
+  background: color-mix(in srgb, var(--brady) 20%, transparent);
+  color: var(--brady);
+}
+.chip.tachy {
+  background: color-mix(in srgb, var(--tachy) 18%, transparent);
+  color: var(--tachy);
+}
+.chip.warn {
+  background: color-mix(in srgb, var(--warn) 22%, transparent);
+  color: var(--warn-ink);
+}
+
+.btn {
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-weight: 800;
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.4;
+}
+.btn.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 6px 16px rgba(31, 46, 68, 0.25);
+}
+.btn.ghost {
+  background: var(--line);
+}
+.btn.danger-text {
+  color: var(--tachy);
+}
+.btn.block {
+  width: 100%;
+}
+.btn.big {
+  font-size: 19px;
+  padding: 18px;
+}
+
+.seg {
+  display: flex;
+  background: var(--line);
+  border-radius: 14px;
+  padding: 4px;
+  gap: 4px;
+}
+.seg button {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.seg button.on {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.seg.small button {
+  padding: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.form label,
+.form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form label > span,
+.form .field > span {
+  font-weight: 700;
+  font-size: 14px;
+}
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Pet (캐릭터) ───────────────────────── */
+.pet {
+  display: block;
+  flex-shrink: 0;
+  max-width: 100%;
+  height: auto;
+}
+.pet .pet-bg {
+  transition: fill 0.4s;
+}
+/* 박동 애니메이션 기준점: 몸은 바닥 가운데, 이름표는 고리, 원은 머리 가운데 */
+.pet .pet-body {
+  transform-box: view-box;
+  transform-origin: 100px 222px;
+}
+.pet .pet-tag {
+  transform-box: view-box;
+  transform-origin: 100px 189px;
+}
+.pet .pet-ring {
+  transform-box: view-box;
+  transform-origin: 100px 110px;
+}
+
+/* ── Measure ───────────────────────── */
+.big-num {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -2px;
+  transition: color 0.3s;
+}
+
+/* 화면 전체가 단색(캐릭터 배경색). 글자 · 버튼은 크림색 — 홈(측정) · 고르기 화면 공통 */
+.on-color {
+  --on: #fffaf3;
+  --on-soft: rgba(255, 250, 243, 0.82);
+  --on-fill: rgba(20, 10, 10, 0.16);
+  --on-fill-strong: rgba(20, 10, 10, 0.26);
+  --on-ink: #2a2222;
+  color: var(--on);
+  transition: background 0.4s;
+}
+.on-color .topbar {
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.on-color .icon-btn:active {
+  background: var(--on-fill);
+}
+.on-color .muted,
+.on-color .disclaimer-footer {
+  color: var(--on-soft);
+}
+.on-color .seg {
+  background: var(--on-fill);
+}
+.on-color .seg button {
+  color: var(--on-soft);
+}
+.on-color .seg button.on {
+  background: var(--on);
+  color: var(--on-ink);
+}
+.on-color .seg button:disabled:not(.on) {
+  opacity: 0.5;
+}
+.on-color .btn.primary {
+  background: var(--on);
+  color: var(--on-ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+.on-color .btn.ghost {
+  background: var(--on-fill);
+  color: var(--on);
+}
+
+/* 측정(홈) 화면 */
+.measure {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: none;
+  padding-bottom: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* 강아지 | 고양이: 같은 폭 두 칸 */
+.species-seg {
+  display: flex;
+  width: min(100%, 300px);
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--on-fill);
+}
+.species-seg button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--on-soft);
+  transition: background 0.2s, color 0.2s;
+}
+.species-seg button.on {
+  background: var(--on);
+  color: var(--on-ink);
+}
+/* 정상 범위 한 줄 (강아지는 눌러서 체격 변경). 높이 고정 → 강아지 · 고양이 전환에도 그대로 */
+.group-slot {
+  width: min(100%, 300px);
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.range-line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.range-line strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+.range-line span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--on-soft);
+}
+.range-line strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.range-line .caret {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--on);
+  transform: translateY(-3px);
+}
+.range-line.pickable:active {
+  transform: scale(0.97);
+}
+/* 투명한 선택 목록을 줄 전체에 덮어서, 누르면 바로 선택 휠이 뜸 */
+.range-line select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  font-size: 16px;
+  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.range-line:has(select:disabled) {
+  opacity: 0.6;
+}
+.species-seg button:disabled:not(.on) {
+  opacity: 0.5;
+}
+
+/* 화면 맨 아래 받침: 동물이 이 위로 빼꼼 올라온 모양 */
+.dock {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px calc(env(safe-area-inset-bottom) + 10px);
+  background: var(--on-fill);
+}
+.mode-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+.mode-tabs button {
+  position: relative;
+  padding: 4px 2px 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--on-soft);
+  transition: color 0.2s;
+}
+.mode-tabs button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--on);
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+.mode-tabs button.on {
+  color: var(--on);
+}
+.mode-tabs button.on::after {
+  transform: scaleX(1);
+}
+.mode-tabs button:disabled:not(.on) {
+  opacity: 0.5;
+}
+.timer-set {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.timer-set .step {
+  width: 36px;
+  height: 36px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  padding-bottom: 3px;
+}
+.timer-set .step:disabled {
+  opacity: 0.3;
+}
+.timer-set .step:active:not(:disabled) {
+  transform: scale(0.92);
+}
+.readout {
+  text-align: center;
+  height: 92px; /* 탭(숫자 + BPM)과 타이머(‹ 숫자 › + 초 + 막대)의 높이를 같게 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px; /* 숫자 ↔ 단위 ↔ 시간 막대 간격을 모두 같게 */
+}
+.readout .big-num,
+.readout .muted {
+  line-height: 1;
+}
+.timer-bar {
+  width: 160px;
+  height: 5px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: var(--on-fill);
+  overflow: hidden;
+}
+.timer-bar span {
+  display: block;
+  height: 100%;
+  background: var(--on);
+  border-radius: inherit;
+}
+.hint {
+  text-align: center;
+  padding: 10px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-weight: 700;
+}
+.hint-sub {
+  min-height: 1.3em;
+}
+/* 캐릭터는 화면 아래에 붙어서 포스터처럼. 버튼은 아래 양쪽 모서리에 */
+.info {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+/* 동물 영역: 화면 폭 · 높이에 맞춘 고정 높이 (탭 · 타이머 전환에도 그대로) */
+.stage-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  height: min(calc(min(82vw, 460px) * 1.07), 44dvh);
+  display: flex;
+}
+.tap-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 8px 0 0;
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+.tap-stage .pet {
+  width: auto;
+  height: 100%;
+  max-width: min(82vw, 460px);
+}
+.tap-stage.waiting .pet {
+  opacity: 0.85;
+}
+.stage-actions {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px; /* 화면 가장자리 쪽으로 살짝 (동물과 덜 겹치게) */
+  pointer-events: none;
+}
+.stage-actions .btn {
+  pointer-events: auto;
+}
+.btn.pill {
+  min-width: 92px;
+  border-radius: 999px;
+  padding: 13px 20px;
+}
+
+/* ── Result ───────────────────────── */
+.result-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.result-num {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.result-num .big-num {
+  font-size: 64px;
+}
+.result-num .unit {
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+.status-banner {
+  font-weight: 900;
+  font-size: 18px;
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+.status-banner.normal {
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  color: var(--ok);
+}
+.status-banner.brady {
+  background: color-mix(in srgb, var(--brady) 18%, transparent);
+  color: var(--brady);
+}
+.status-banner.tachy {
+  background: color-mix(in srgb, var(--tachy) 16%, transparent);
+  color: var(--tachy);
+}
+.range-bar {
+  width: 100%;
+  padding: 10px 6px 18px;
+}
+.rb {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brady), var(--line) 30%, var(--line) 70%, var(--tachy));
+  opacity: 0.9;
+}
+.rb-ok {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--ok);
+  border-radius: 999px;
+}
+.rb-marker {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 4px solid var(--ink);
+  transform: translate(-50%, -50%);
+}
+.rb-label {
+  position: absolute;
+  top: 14px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pause-bpm {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  font-size: 14px;
+}
+.ok-msg {
+  color: var(--ok);
+  font-weight: 700;
+  margin: 0;
+}
+.guidance {
+  border-left: 6px solid var(--line);
+}
+.guidance.brady {
+  border-left-color: var(--brady);
+}
+.guidance.tachy {
+  border-left-color: var(--tachy);
+}
+.guidance.warn {
+  border-left-color: var(--warn);
+}
+.guidance h4 {
+  margin: 14px 0 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.guidance .note {
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+.checklist li label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 7px 0;
+  font-size: 15px;
+}
+.checklist input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  accent-color: var(--accent);
+}
+.checklist input:checked + span {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+.ddx {
+  margin-bottom: 10px;
+}
+.ddx-group {
+  font-weight: 800;
+  font-size: 14px;
+}
+.ddx ul,
+.tests {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.cite {
+  padding: 0 4px;
+}
+
+/* ── Disclaimer ───────────────────────── */
+.disclaimer-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(40, 20, 25, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.modal {
+  background: var(--card);
+  border-radius: 28px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  animation: pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+.modal p {
+  margin: 0;
+  line-height: 1.5;
+}
+.modal-emoji {
+  font-size: 44px;
+}
+@keyframes pop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+.result-hero .pet {
+  width: min(210px, 60vw);
+}
+
+/* 화면에는 안 보이고 화면 낭독기에만 읽히는 글자 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 좁은 화면(iPhone SE 등): 아래 메뉴 한 줄 유지 */
+@media (max-width: 380px) {
+    }
+
+/* ── 설정: iPhone 설정 앱 스타일 (inset grouped) ───────────────── */
+.ios-settings {
+  --ios-bg: #f2f2f7;
+  --ios-cell: #ffffff;
+  --ios-label: #000000;
+  --ios-secondary: rgba(60, 60, 67, 0.6);
+  --ios-separator: rgba(60, 60, 67, 0.29);
+  --ios-tint: #007aff;
+  --ios-red: #ff3b30;
+  --ios-green: #34c759;
+  --ios-fill: rgba(120, 120, 128, 0.16);
+  max-width: 600px;
+  min-height: 100dvh;
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 32px);
+  background: var(--ios-bg);
+  color: var(--ios-label);
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-color-scheme: dark) {
+  .ios-settings {
+    --ios-bg: #000000;
+    --ios-cell: #1c1c1e;
+    --ios-label: #ffffff;
+    --ios-secondary: rgba(235, 235, 245, 0.6);
+    --ios-separator: rgba(84, 84, 88, 0.65);
+    --ios-tint: #0a84ff;
+    --ios-red: #ff453a;
+    --ios-green: #30d158;
+    --ios-fill: rgba(120, 120, 128, 0.32);
+  }
+}
+.ios-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  margin: 0 -16px;
+  padding: calc(env(safe-area-inset-top) + 8px) 16px 18px;
+  background: linear-gradient(to bottom, var(--ios-bg) 70%, color-mix(in srgb, var(--ios-bg) 0%, transparent));
+}
+/* 뒤로 버튼: 테두리 없이 화살표만 (누르는 영역은 44px 유지) */
+.ios-back {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 0;
+  color: var(--ios-label);
+}
+.ios-back:active {
+  background: var(--ios-fill);
+}
+.ios-nav-title {
+  margin: 0;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+}
+.ios-section {
+  margin-bottom: 32px;
+}
+.ios-header {
+  margin: 0 20px 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ios-secondary);
+}
+.ios-footer {
+  margin: 8px 20px 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ios-secondary);
+}
+.ios-group {
+  overflow: hidden;
+  border-radius: 26px;
+  background: var(--ios-cell);
+}
+.ios-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 20px;
+  text-align: left;
+  font-size: 17px;
+  color: var(--ios-label);
+  background: var(--ios-cell);
+}
+button.ios-cell:active {
+  background: color-mix(in srgb, var(--ios-label) 8%, var(--ios-cell));
+}
+.ios-cell-body {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+}
+/* 구분선은 글자 시작점부터 (아이콘 칸은 아이콘 뒤부터) */
+.ios-cell + .ios-cell .ios-cell-body,
+.ios-cell + .ios-cell.ios-action {
+  box-shadow: inset 0 0.5px 0 var(--ios-separator);
+}
+.ios-label {
+  font-size: 17px;
+  font-weight: 400;
+}
+.ios-mark {
+  margin-left: 1px;
+  font-size: 11px;
+  color: var(--ios-secondary);
+}
+.ios-trailing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ios-secondary);
+}
+.ios-value {
+  font-size: 17px;
+  color: var(--ios-secondary);
+}
+.ios-chevron {
+  color: color-mix(in srgb, var(--ios-secondary) 70%, transparent);
+}
+/* 정상 범위 값: 회색 글자처럼 보이다가 누르면 바로 수정 */
+.ios-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.ios-dash {
+  color: var(--ios-secondary);
+}
+input.ios-num {
+  width: 46px;
+  padding: 4px 2px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--ios-secondary);
+  -moz-appearance: textfield;
+}
+input.ios-num:focus {
+  background: var(--ios-fill);
+  color: var(--ios-label);
+}
+input.ios-num.changed {
+  color: var(--ios-tint);
+}
+input.ios-num::-webkit-outer-spin-button,
+input.ios-num::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.ios-juvenile-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 17px;
+  color: var(--ios-label);
+}
+.ios-juvenile-edit input.ios-num {
+  background: var(--ios-fill);
+  color: var(--ios-label);
+}
+.ios-link {
+  margin-left: 8px;
+  font-size: 17px;
+  color: var(--ios-tint);
+}
+.ios-action {
+  justify-content: flex-start;
+  color: var(--ios-red);
+}
+.ios-action.disabled {
+  color: color-mix(in srgb, var(--ios-red) 40%, transparent);
+}
+/* 맨 아래 짧은 안내 (테두리 없이) */
+.ios-plain-note {
+  margin: 0 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ios-secondary);
+}
+/* iOS 스위치 */
+.ios-switch {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--ios-fill);
+  transition: background 0.25s;
+}
+.ios-switch span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.15),
+    0 3px 1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s;
+}
+.ios-switch.on {
+  background: var(--ios-green);
+}
+.ios-switch.on span {
+  transform: translateX(20px);
+}
+
+/* ── 결과 (참고: 가운데 머리 + 단계 막대 + 값 카드 + 반반 카드) ───────── */
+.result .content {
+  gap: 28px; /* 묶음 사이는 넓게 (근접성) */
+}
+.result-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px 0 2px;
+}
+.result-head .pet {
+  margin-bottom: 22px;
+}
+.result-status {
+  font-size: 17px;
+  font-weight: 800;
+}
+.result-status.normal {
+  color: var(--ok);
+}
+.result-status.brady {
+  color: var(--brady);
+}
+.result-status.tachy {
+  color: var(--tachy);
+}
+.result-bpm {
+  margin-top: 14px;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.result-bpm span {
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+.result-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.result-meta span + span::before {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 11px;
+  margin: 0 10px;
+  vertical-align: -1px;
+  background: var(--line);
+  background: color-mix(in srgb, var(--ink-soft) 40%, transparent);
+}
+/* 단계 막대 */
+.rb2 {
+  position: relative;
+  padding: 0 14px;
+  margin: 10px 0 0; /* 큰 BPM ↔ 배지 간격을 상태 줄 ↔ BPM 간격과 같게 */
+}
+.rb2-badge-row,
+.rb2-ticks {
+  position: relative;
+  height: 26px;
+}
+.rb2-badge {
+  position: absolute;
+  bottom: 2px;
+  transform: translateX(-50%);
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  background: var(--idle);
+}
+.rb2-badge::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  margin-left: -4px;
+  border: 4px solid transparent;
+  border-bottom: 0;
+  border-top-color: inherit;
+}
+.rb2-badge.normal {
+  background: var(--ok);
+  border-top-color: var(--ok);
+}
+.rb2-badge.brady {
+  background: var(--brady);
+  border-top-color: var(--brady);
+}
+.rb2-badge.tachy {
+  background: var(--tachy);
+  border-top-color: var(--tachy);
+}
+.rb2-badge.normal::after { border-top-color: var(--ok); }
+.rb2-badge.brady::after { border-top-color: var(--brady); }
+.rb2-badge.tachy::after { border-top-color: var(--tachy); }
+.rb2-ticks {
+  height: 20px;
+}
+.rb2-ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.rb2-ticks span.strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.rb2-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--idle) 28%, transparent);
+}
+.rb2-ok {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ok) 55%, transparent);
+}
+.rb2-dot {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--card);
+  transform: translate(-50%, -50%);
+  background: var(--idle);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.rb2-dot.normal { background: var(--ok); }
+.rb2-dot.brady { background: var(--brady); }
+.rb2-dot.tachy { background: var(--tachy); }
+/* 반반 카드 */
+.split-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 18px 0;
+}
+.split-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 12px;
+  text-align: center;
+}
+.split-item + .split-item {
+  border-left: 1px solid var(--line);
+}
+.split-icon {
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.split-label {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.split-value {
+  font-size: 17px;
+  font-weight: 800;
+}
+.split-value.warn {
+  color: var(--warn-ink);
+}
+.split-sub {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.card-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.card-row h3 {
+  margin: 0;
+}
+.accent-num {
+  color: var(--accent);
+}
+
+/* 결과 화면 색: 참고 레이아웃에서 잰 색 (바탕 #f9f9fb · 흰 카드 + 옅은 테두리 · 주황 강조 · 연보라 #d8d9ef 막대 · 살구색 #f3ded9 아이콘)
+   다크 모드에서도 같은 밝은 색. 상태 한 줄 · 측정값 배지는 판정 구분을 위해 상태색 유지 */
+@media all {
+  .result {
+    --bg: #f9f9fb;
+    --card: #ffffff;
+    --ink: #222222;
+    --ink-soft: #8a8a92;
+    --line: #ececf1;
+    --accent: #e5582b;
+    --accent-ink: #ffffff;
+    --warn-ink: #b8740a;
+    --lavender: #d8d9ef;
+    --lavender-strong: #b9bce4;
+    --peach: #f3ded9;
+    --shadow: none;
+    color-scheme: light;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .result .icon-btn,
+  .result .acc-chevron {
+    color: #222222;
+  }
+  .result .card {
+    border: 1px solid #f0f0f4;
+  }
+  .result .topbar {
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+  }
+  .result .rb2-track {
+    background: var(--lavender);
+  }
+  .result .rb2-ok {
+    background: var(--lavender-strong);
+  }
+  .result .split-item + .split-item {
+    border-left-color: #e6e6ec;
+  }
+  .result .btn.primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: none;
+  }
+  .result .btn.ghost {
+    background: #f1f1f5;
+  }
+  .result .pause-bpm {
+    background: #fff3ee;
+  }
+}
+
+/* 접히는 검토 안내 */
+.acc-head,
+.sub-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+}
+.acc-head span {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.acc-head strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+.acc-head small,
+.sub-head small {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.acc-chevron {
+  flex-shrink: 0;
+  color: var(--ink-soft);
+  transition: transform 0.2s;
+}
+.acc-chevron.open {
+  transform: rotate(180deg);
+}
+.acc-body {
+  margin-top: 14px;
+}
+.sub-acc {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.sub-head {
+  padding: 12px 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.sub-head span {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.sub-acc .checklist,
+.sub-acc .tests {
+  margin-top: 6px;
+}
+
+/* ── 결과 화면 묶음 (게슈탈트: 근접성 · 공통 영역 · 유사성 · 단순성) ── */
+.result-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hero-group {
+  gap: 0;
+}
+.result-group + .card,
+.card + .result-group {
+  margin-top: 0;
+}
+.group-label {
+  margin: 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.guide-row.card {
+  padding: 0 18px;
+}
+.guide-row .acc-head {
+  padding: 17px 0;
+}
+.guide-row .acc-head > span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.guide-row .acc-body {
+  margin-top: 0;
+  padding-bottom: 16px;
+}
+.acc-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+.acc-dot.brady {
+  background: var(--brady);
+}
+.acc-dot.tachy {
+  background: var(--tachy);
+}
+.acc-dot.warn {
+  background: var(--warn);
+}
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.result-actions p {
+  margin: 0;
+}
+.result-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 8px;
+  text-align: center;
+}
+.result-foot .cite {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.result-foot .disclaimer-footer {
+  margin: 0;
+}
+
+.acc-dot.normal {
+  background: var(--ok);
+}
+/* 정상 안내: 검토 안내 줄과 같은 모양 (점 + 본문 굵기) */
+.result .ok-msg {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 16px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.result .ok-msg .acc-dot {
+  transform: translateY(-1px);
+}
+
+/* 주의 문구: 눈에 띄는 주황 경고 상자 */
+.result .note.caution {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fff0e8;
+  color: #c2410c;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.result .note.caution svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+/* 하위 메뉴(체크리스트 · 추가 검사) 글씨 한 단계 작게 */
+.result .sub-head {
+  font-size: 13px;
+}
+.result .sub-acc .checklist li label {
+  padding: 5px 0;
+  font-size: 13px;
+  gap: 8px;
+}
+.result .sub-acc .checklist input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+.result .sub-acc .tests {
+  font-size: 13px;
+}
+
+/* ── 측정 화면 게슈탈트 정리 ──
+   유사성: 측정 방식(탭 | 타이머)도 '하나 고르기'라 아래 강아지 | 고양이와 같은 알약 모양
+   근접성: 숫자 묶음은 위 빈 공간 가운데, 안내 문구는 탭할 동물 바로 위
+   전경/배경: 지금 못 누르는 버튼 · 시작 전 시간 막대는 한 단계 흐리게 */
+.measure .mode-tabs {
+  position: relative;
+  justify-self: center;
+  display: grid;
+  grid-template-columns: 64px 64px;
+  gap: 0;
+  padding: 0 0 10px;
+}
+.measure .mode-tabs button {
+  padding: 6px 0 4px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--on);
+  opacity: 0.55;
+  transition: opacity 0.25s, transform 0.25s;
+}
+.measure .mode-tabs button::after {
+  display: none;
+}
+.measure .mode-tabs button.on {
+  opacity: 1;
+  transform: scale(1.06);
+}
+.measure .mode-tabs button:disabled:not(.on) {
+  opacity: 0.3;
+}
+/* 고른 칸 가운데 아래 작은 점 · 전환 시 옆으로 미끄러짐 */
+.measure .mode-dot {
+  position: absolute;
+  left: 32px;
+  bottom: 2px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--on);
+  transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+  pointer-events: none;
+}
+.measure .mode-tabs.timer .mode-dot {
+  transform: translateX(64px);
+}
+.measure .info {
+  justify-content: flex-start;
+  gap: 0;
+}
+.measure .readout-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.measure .readout-wrap .readout {
+  justify-content: center;
+}
+.measure .hint {
+  padding: 0 24px 14px;
+}
+.measure .stage-actions .btn:disabled {
+  opacity: 0.4;
+  box-shadow: none;
+}
+.measure .timer-bar:not(.running) span {
+  opacity: 0.45;
+}
+
+/* 작은 화면: 숫자 · 안내 묶음은 줄지 않고, 동물 그림이 남는 높이에 맞춰 줄어듦 */
+.measure .info {
+  flex: 1 0 auto;
+}
+.measure .stage-wrap {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+/* 검토 안내 세부 내용: 자간 살짝 좁게, 한글 단어가 중간에서 끊기지 않게 (단어 단위 줄바꿈) */
+.guide-list .acc-body {
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ── 결과 화면 글자 크기 위계 (5단계) ──
+   표시 52 · 제목 17 · 본문 15 · 보조 13 · 각주 11 */
+.result {
+  --fs-display: 52px;
+  --fs-title: 17px;
+  --fs-body: 15px;
+  --fs-sub: 13px;
+  --fs-foot: 11px;
+}
+/* 표시: 측정값 */
+.result .result-bpm {
+  font-size: var(--fs-display);
+}
+/* 제목: 화면 제목 · 판정 · 지표 값 · 검토 항목 제목 · 버튼 · 단위 */
+.result .topbar h1,
+.result .result-status,
+.result .result-bpm span,
+.result .split-value,
+.result .acc-head strong,
+.result .btn {
+  font-size: var(--fs-title);
+}
+/* 본문: 펼친 검토 내용 (주의 · 감별 진단 묶음 · 항목) · 정상 안내 · 하위 메뉴 제목(체크리스트 · 추가 검사 = '생리적'과 같은 급) */
+.result .note.caution,
+.result .ddx-group,
+.result .sub-head,
+.result .ddx ul,
+.result .sub-acc .checklist li label,
+.result .sub-acc .tests,
+.result .ok-msg {
+  font-size: var(--fs-body);
+}
+/* 보조: 이름표 · 설명 · 하위 메뉴 (체크리스트 · 추가 검사) · 막대 숫자 */
+.result .result-meta,
+.result .rb2-ticks span,
+.result .rb2-badge,
+.result .group-label,
+.result .split-label,
+.result .split-sub,
+.result .sub-head small,
+.result .result-actions p {
+  font-size: var(--fs-sub);
+}
+/* 각주: 출처 · 면책 */
+.result .result-foot .cite,
+.result .result-foot .disclaimer-footer {
+  font-size: var(--fs-foot);
+}
+
+/* 강아지 | 고양이: 프로필 사진 캐러셀 (좌우로 밀어서 전환) */
+.sp-carousel {
+  position: relative;
+  width: 100%;
+  height: 74px;
+  touch-action: pan-y;
+  overflow: visible; /* 좁은 화면에서 옆 프로필이 잘리지 않게 */
+}
+.sp-item {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: var(--on);
+  transform-origin: 50% 35px;
+  transition: transform 0.38s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.3s;
+}
+.sp-carousel.dragging .sp-item {
+  transition: none;
+}
+.sp-avatar {
+  display: block;
+  width: 70px;
+  height: 70px;
+  padding: 3px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.3s;
+}
+.sp-item.on .sp-avatar {
+  background: var(--on);
+}
+.sp-avatar .pet {
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+}
+/* 안 고른 쪽: 사진은 또렷하게 두고 살짝만 흐리게 (작게 + 이름 흐리게) */
+.sp-item .sp-avatar,
+.sp-item .sp-name {
+  transition: background 0.3s, opacity 0.3s;
+}
+.sp-item:not(.on) .sp-avatar {
+  opacity: 0.85;
+}
+.sp-item:not(.on) .sp-name {
+  opacity: 0.55;
+}
+.sp-name {
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.sp-carousel.disabled .sp-item:not(.on) {
+  opacity: 0.25;
+}
+
+/* 프로필 줄 양끝 글자 버튼: 다시(흐림) · 완료(또렷) — 원형 프로필과 모양이 겹치지 않게 테두리 없이 */
+.dock-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+.text-act {
+  min-height: 44px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--on);
+  transition: opacity 0.2s, transform 0.15s;
+}
+.text-act.left {
+  text-align: left;
+  opacity: 0.75;
+}
+.text-act.right {
+  text-align: right;
+}
+.text-act:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.text-act:disabled {
+  opacity: 0.3;
+}
+
+/* 프로필 줄: 헤더 바로 아래 */
+.profile-top {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 0;
+}
+.profile-top .sp-carousel {
+  width: 260px;
+}
+/* 받침 한 줄: 다시 · 정상 범위 · 완료 */
+.dock .dock-row {
+  grid-template-columns: 56px 1fr 56px;
+}
+.dock .dock-row .group-slot {
+  width: 100%;
+  min-width: 0;
+}
+.dock {
+  padding-top: 10px;
+}
+
+/* 측정 방식 전환: 왼쪽 위 버튼 하나 (지금과 다른 방식 이름을 보여 줌) */
+.measure .topbar {
+  grid-template-columns: 96px 1fr 64px;
+}
+.mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 40px;
+  padding: 0 6px 0 4px;
+  color: var(--on);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: transform 0.15s, opacity 0.2s;
+}
+.mode-switch:active:not(:disabled) {
+  transform: scale(0.95);
+}
+.mode-switch:disabled {
+  opacity: 0.4;
+}
+
+/* 맨 위 묶음: 프로필 → 체격 · 정상 범위 (세로로) */
+.profile-top {
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.profile-top .group-slot {
+  height: 30px;
+}
+/* 동물 그림 크게: 화면 폭 92% · 높이 54%까지 */
+.measure .stage-wrap {
+  height: min(calc(min(92vw, 500px) * 1.07), 54dvh);
+}
+.measure .tap-stage .pet {
+  max-width: min(92vw, 500px);
+}
+/* 숫자 · 안내 묶음: 위 묶음과 그림 사이 가운데, 간격 고르게 */
+.measure .hint {
+  padding: 0 24px 10px;
+}
+.measure .dock {
+  padding-top: 6px;
+}
+/* 위 묶음(프로필 · 범위) ↔ 숫자 ↔ 안내 ↔ 그림 간격을 고르게 */
+.measure .info {
+  padding-top: 12px;
+  gap: 8px;
+}
+.measure .readout {
+  height: auto;
+  min-height: 0;
+}
+/* 숫자 칸은 탭 · 타이머 같은 높이로 고정, 남는 세로 공간은 모두 동물 그림이 차지 (모드를 바꿔도 그림 크기 그대로) */
+.measure .readout {
+  height: 92px;
+}
+.measure .info {
+  flex: 0 0 auto;
+}
+.measure .readout-wrap {
+  flex: 0 0 auto;
+}
+.measure .stage-wrap {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+/* 측정 화면 동물: 위 여백을 잘라 크게 그리고, 곤두선 털 · 박동 링은 그림 밖으로 넘쳐 보이게 */
+.tap-stage .pet {
+  overflow: visible;
+}
+/* 곤두선 털(빈맥)이 안내 문구에 닿지 않게 그림 위 여유 + 글자는 항상 위에 */
+.measure .stage-wrap {
+  margin-top: 22px;
+}
+.measure .hint {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+/* 프로필을 8px 위로 올려 아래 체격 · 정상 범위 글자와 간격 확보 (글자 위치는 그대로) */
+.profile-top {
+  margin-top: -8px;
+}
+.profile-top .group-slot {
+  margin-top: 8px;
+}
+/* 숫자 ↔ 단위 줄을 붙이고, 숫자 묶음을 위로 올려 위(체격 줄) · 아래(안내) 간격을 같게 */
+.measure .readout {
+  gap: 4px;
+}
+.measure .readout.tap {
+  transform: translateY(-9px);
+}
+.measure .readout.timer {
+  transform: translateY(-10px); /* 체격 줄 → 숫자 = 시간 막대 → 안내 */
+}
+/* 타이머 숫자는 한 단계 작게 (52 → 46px) */
+.measure .readout.timer .big-num {
+  font-size: 46px;
+}
+.measure .readout.timer .step {
+  font-size: 27px;
+}

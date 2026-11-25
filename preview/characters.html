@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>콩닥 캐릭터 시안</title>
+<style>
+  :root {
+    --bg: #fff7f8; --card: #fff; --ink: #3b2a30; --soft: #8f747b; --line: #f3dfe3;
+    --pink: #ff8fa3; --blue: #6f9bff; --coral: #ff6b5a; --amber: #f5a524;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #1d1518; --card: #2a1f23; --ink: #fbe9ed; --soft: #c3a3ab; --line: #3d2c31; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .lead { color: var(--soft); margin: 0 0 20px; line-height: 1.55; font-size: 15px; }
+  .card { background: var(--card); border-radius: 24px; padding: 20px 16px; margin-bottom: 18px;
+    box-shadow: 0 6px 20px rgba(255,111,138,.10); }
+  .card h2 { margin: 0; font-size: 20px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 800; color: #fff; background: var(--ink);
+    border-radius: 999px; padding: 3px 10px; margin-right: 6px; vertical-align: 3px; }
+  .sub { color: var(--soft); font-size: 14px; margin: 6px 0 12px; }
+  .principles { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+  .principles li { font-size: 14px; line-height: 1.45; background: var(--bg); border-radius: 12px; padding: 8px 12px; }
+  .principles b { color: #e0567a; }
+  .hero { display: flex; justify-content: center; gap: 8px; margin: 4px 0 10px; }
+  .hero button { background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .hint { text-align: center; font-size: 12px; color: var(--soft); margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: 44px repeat(5, minmax(0, 1fr)); gap: 4px; align-items: center; }
+  .grid .h { font-size: 11px; color: var(--soft); text-align: center; font-weight: 700; }
+  .grid .rowlabel { font-size: 12px; font-weight: 800; color: var(--soft); }
+  .grid svg, .hero svg { width: 100%; height: auto; max-width: 100%; }
+  .hero button { flex: 0 1 150px; min-width: 0; }
+  .small { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+    font-size: 12px; color: var(--soft); flex-wrap: wrap; }
+  .legend { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; font-size: 12px; text-align: center; }
+  .legend i { display: block; height: 10px; border-radius: 999px; margin-bottom: 4px; }
+  .beat { animation: beat .28s cubic-bezier(.2,.9,.3,1.3); transform-origin: 50% 55%; }
+  @keyframes beat { 40% { transform: scale(1.12); } 75% { transform: scale(.97); } }
+  .pick { text-align: center; font-weight: 800; font-size: 15px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>콩닥 캐릭터 시안</h1>
+  <p class="lead">
+    세 가지 방향 모두 <b>같은 표정 규칙</b>과 <b>같은 색 규칙</b>을 써요(유사성).
+    상태는 색과 눈 모양만으로 구분되게 했어요.
+    큰 하트를 탭하면 측정할 때처럼 “콩” 뛰어요.
+  </p>
+
+  <div class="card">
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div id="concepts"></div>
+</main>
+
+<script>
+const INK = '#3b2a30'
+const MOODS = [
+  { key: 'idle', label: '대기', color: '#ff8fa3' },
+  { key: 'happy', label: '정상', color: '#ff8fa3' },
+  { key: 'sleepy', label: '서맥', color: '#6f9bff' },
+  { key: 'stressed', label: '빈맥', color: '#ff6b5a' },
+  { key: 'worried', label: '불규칙', color: '#f5a524' },
+]
+const shade = (hex, amt) => {
+  const n = parseInt(hex.slice(1), 16)
+  const c = (v) => Math.max(0, Math.min(255, Math.round(v * (1 - amt))))
+  return `rgb(${c(n >> 16)},${c((n >> 8) & 255)},${c(n & 255)})`
+}
+const tint = (hex, a) => {
+  const n = parseInt(hex.slice(1), 16)
+  return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`
+}
+const mirror = (inner) => `${inner}<g transform="translate(200 0) scale(-1 1)">${inner}</g>`
+
+// 하트 기본형 (x 20–180, y 28–175)
+const HEART = 'M100 175C40 135 20 100 20 72 20 45 42 28 66 28c16 0 28 9 34 22 6-13 18-22 34-22 24 0 46 17 46 44 0 28-20 63-80 103z'
+
+/* ── 공통 얼굴: 눈·코·입을 좁은 영역에 모아 '얼굴'로 묶임(근접성) ── */
+function eyes(mood, cx, cy, gap) {
+  const L = cx - gap, R = cx + gap
+  const s = `stroke="${INK}" stroke-width="5.5" stroke-linecap="round" fill="none"`
+  switch (mood) {
+    case 'happy': return `<path d="M${L-8} ${cy+3}q8-11 16 0M${R-8} ${cy+3}q8-11 16 0" ${s}/>`
+    case 'sleepy': return `<path d="M${L-8} ${cy}q8 7 16 0M${R-8} ${cy}q8 7 16 0" ${s}/>`
+    case 'stressed': return `<circle cx="${L}" cy="${cy}" r="8.5" fill="${INK}"/><circle cx="${R}" cy="${cy}" r="8.5" fill="${INK}"/>
+      <circle cx="${L+3}" cy="${cy-3}" r="3" fill="#fff"/><circle cx="${R+3}" cy="${cy-3}" r="3" fill="#fff"/>`
+    case 'worried': return `<circle cx="${L}" cy="${cy}" r="6.5" fill="${INK}"/><circle cx="${R}" cy="${cy}" r="6.5" fill="${INK}"/>
+      <path d="M${L-9} ${cy-16}l15 5M${R+9} ${cy-16}l-15 5" ${s} stroke-width="4.5"/>`
+    default: return `<circle cx="${L}" cy="${cy}" r="7" fill="${INK}"/><circle cx="${R}" cy="${cy}" r="7" fill="${INK}"/>
+      <circle cx="${L+2.5}" cy="${cy-2.5}" r="2.4" fill="#fff"/><circle cx="${R+2.5}" cy="${cy-2.5}" r="2.4" fill="#fff"/>`
+  }
+}
+function nose(species, x, y) {
+  return species === 'cat'
+    ? `<path d="M${x-7} ${y-3}h14l-7 7z" fill="${INK}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`
+    : `<ellipse cx="${x}" cy="${y}" rx="8" ry="6" fill="${INK}"/>`
+}
+function mouth(mood, x, y) {
+  const s = `stroke="${INK}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"`
+  switch (mood) {
+    case 'happy': return `<path d="M${x-9} ${y}q9 12 18 0z" fill="${INK}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`
+    case 'sleepy': return `<circle cx="${x}" cy="${y+3}" r="3.5" fill="${INK}"/>`
+    case 'stressed': return `<path d="M${x-10} ${y+3}l5-4 5 4 5-4 5 4" ${s}/>`
+    case 'worried': return `<path d="M${x-7} ${y+5}q7-6 14 0" ${s}/>`
+    default: return `<path d="M${x-9} ${y}q4.5 5 9 0q4.5 5 9 0" ${s}/>`
+  }
+}
+function extras(mood, color) {
+  if (mood === 'stressed') return `<path d="M168 40c6 9 8 13 8 16a8 8 0 0 1-16 0c0-3 2-7 8-16z" fill="#8fd3ff"/>`
+  if (mood === 'sleepy') return `<text x="160" y="36" font-size="22" font-weight="900" fill="${color}" font-family="system-ui">z</text>`
+  return ''
+}
+
+/* ── 시안 A: 단순성(Prägnanz) ── */
+function conceptA(species, mood) {
+  const c = MOODS.find(m => m.key === mood).color
+  const ear = shade(c, 0.12)
+  const ears = species === 'cat'
+    ? mirror(`<path d="M34 60 40 14c1-6 6-8 11-4l34 28z" fill="${ear}" stroke="${ear}" stroke-width="6" stroke-linejoin="round"/>`)
+    : mirror(`<path d="M54 32C18 28-2 72 6 110c4 17 27 17 31-1 4-24 6-52 25-72z" fill="${ear}"/>`)
+  return `<g>${ears}<path d="${HEART}" fill="${c}"/>
+    ${eyes(mood, 100, 94, 22)}${nose(species, 100, 112)}${mouth(mood, 100, 122)}${extras(mood, c)}</g>`
+}
+
+/* ── 시안 B: 전경-배경 + 폐쇄성 ── */
+function conceptB(species, mood) {
+  const c = MOODS.find(m => m.key === mood).color
+  const ear = shade(c, 0.12)
+  const ears = species === 'cat'
+    ? mirror(`<path d="M40 70 42 20c0-7 6-9 11-5l38 32z" fill="${c}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/>`)
+    : mirror(`<path d="M50 48C20 46 6 84 14 116c4 15 22 15 26 0 5-22 8-46 22-60z" fill="${ear}"/>`)
+  // 머리 = 둥근 사각형, 주둥이 = 비워 낸 하트(음각). 하트는 '그려지지 않고' 남은 자리로 보임
+  return `<g>${ears}<rect x="28" y="38" width="144" height="136" rx="66" fill="${c}"/>
+    <path d="${HEART}" transform="translate(50 92) scale(.5)" fill="#fff" opacity=".92"/>
+    ${eyes(mood, 100, 88, 30)}${nose(species, 100, 118)}
+    <path d="M100 124v8" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>${mouth(mood, 100, 138)}${extras(mood, c)}</g>`
+}
+
+/* ── 시안 C: 연속성 + 폐쇄성 (한 줄 하트) ── */
+function conceptC(species, mood) {
+  const c = MOODS.find(m => m.key === mood).color
+  const line = `stroke="${c}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"`
+  const outline = species === 'cat'
+    ? 'M100 172C155 135 176 102 176 74L166 20 130 36Q108 38 100 54 92 38 70 36L34 20 24 74C24 100 40 126 76 154'
+    : 'M100 172C155 135 178 102 178 74 178 48 160 30 136 30 118 30 106 40 100 54 94 40 82 30 64 30 40 30 22 48 22 74 22 100 40 126 76 154'
+  const ears = species === 'cat' ? '' : mirror(`<path d="M50 34C12 34 0 76 8 108" fill="none" ${line}/>`)
+  return `<g><path d="${HEART}" fill="${tint(c, .16)}"/>${ears}<path d="${outline}" fill="none" ${line}/>
+    ${eyes(mood, 100, 94, 22)}${nose(species, 100, 112)}${mouth(mood, 100, 122)}${extras(mood, c)}</g>`
+}
+
+const CONCEPTS = [
+  {
+    id: 'A', name: '말랑 하트', fn: conceptA,
+    sub: '기본 도형 몇 개로만 만든 납작한 하트 캐릭터',
+    principles: [
+      ['단순성 (Prägnanz)', '하트 하나와 귀 두 개, 점 눈만 써요. 광택, 볼터치, 테두리를 모두 빼서 작게 줄여도 형태가 바로 읽혀요.'],
+      ['유사성', '귀는 몸과 같은 색에서 조금 어둡게만 했어요. 따로 떨어진 부품이 아니라 하나의 몸으로 묶여 보여요.'],
+      ['근접성', '눈, 코, 입을 하트 가운데 좁은 영역에 모았어요. 점 몇 개만으로도 얼굴로 인식돼요.'],
+      ['대칭성', '좌우가 완전히 대칭이라 안정적이고, 시선이 중앙의 숫자로 이어져요.'],
+    ],
+  },
+  {
+    id: 'B', name: '음각 하트', fn: conceptB,
+    sub: '동그란 얼굴에서 주둥이 자리를 하트 모양으로 비워 둔 캐릭터',
+    principles: [
+      ['전경-배경', '하트를 따로 그리지 않고 얼굴에서 비워 낸 자리(음각)로 보여줘요. 주둥이로도 보이고 하트로도 보여요.'],
+      ['폐쇄성', '하트의 윗부분 오목한 곳에 코가 앉아 있어요. 윤곽이 끊겨 있어도 하트 전체가 완성돼 보여요.'],
+      ['근접성', '코와 입을 하트 안에 모아서 주둥이 하나로 묶여 보여요.'],
+      ['유사성', '개와 고양이는 귀 모양만 다르고 나머지 구조는 같아서 한 가족처럼 보여요.'],
+    ],
+  },
+  {
+    id: 'C', name: '한 줄 하트', fn: conceptC,
+    sub: '한 번에 그은 선으로 하트와 귀를 함께 그린 캐릭터',
+    principles: [
+      ['연속성', '고양이는 하트의 윤곽선이 끊기지 않고 그대로 귀 끝까지 이어져요. 선 하나가 몸과 귀를 함께 만들어요.'],
+      ['폐쇄성', '왼쪽 아래 선을 일부러 끊었어요. 그래도 뇌가 빈틈을 채워서 완전한 하트로 봐요. 손그림 같은 리듬감도 생겨요.'],
+      ['단순성', '선의 굵기를 하나로 통일하고 안은 옅은 색으로만 채웠어요.'],
+      ['근접성', '시안 A와 같은 얼굴 배치를 써서 얼굴로 바로 인식돼요.'],
+    ],
+  },
+]
+
+const svg = (inner, size) =>
+  `<svg viewBox="-6 0 212 186" width="${size}" height="${size * 186 / 212}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">${inner}</svg>`
+
+document.getElementById('legend').innerHTML = MOODS.map(m =>
+  `<div><i style="background:${m.color}"></i>${m.label}</div>`).join('')
+
+document.getElementById('concepts').innerHTML = CONCEPTS.map(c => `
+  <section class="card">
+    <h2><span class="tag">시안 ${c.id}</span>${c.name}</h2>
+    <p class="sub">${c.sub}</p>
+    <ul class="principles">${c.principles.map(([k, v]) => `<li><b>${k}</b> · ${v}</li>`).join('')}</ul>
+    <div class="hero">
+      <button data-beat>${svg(c.fn('dog', 'happy'), 150)}</button>
+      <button data-beat>${svg(c.fn('cat', 'happy'), 150)}</button>
+    </div>
+    <div class="hint">탭해서 박동 확인</div>
+    <div class="grid">
+      <div></div>${MOODS.map(m => `<div class="h">${m.label}</div>`).join('')}
+      <div class="rowlabel">개</div>${MOODS.map(m => `<div>${svg(c.fn('dog', m.key), 120)}</div>`).join('')}
+      <div class="rowlabel">고양이</div>${MOODS.map(m => `<div>${svg(c.fn('cat', m.key), 120)}</div>`).join('')}
+    </div>
+    <div class="small">작은 크기(목록 아이콘)
+      ${svg(c.fn('dog', 'happy'), 44)}${svg(c.fn('cat', 'stressed'), 44)}${svg(c.fn('dog', 'sleepy'), 28)}${svg(c.fn('cat', 'happy'), 28)}
+    </div>
+  </section>`).join('')
+
+document.querySelectorAll('[data-beat]').forEach(b => b.addEventListener('pointerdown', () => {
+  const s = b.querySelector('svg')
+  s.classList.remove('beat'); void s.getBoundingClientRect(); s.classList.add('beat')
+}))
+</script>
+</main>
+</body>
+</html>

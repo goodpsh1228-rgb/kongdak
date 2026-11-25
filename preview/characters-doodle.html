@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>콩닥 낙서 캐릭터</title>
+<style>
+  :root { --bg: #fbf6f1; --card: #fff; --ink: #5c2a35; --soft: #9a7c80; --line: #efe2dc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #1d1518; --card: #2a1f23; --ink: #fbe9ed; --soft: #c3a3ab; --line: #3d2c31; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .lead { color: var(--soft); margin: 0 0 18px; line-height: 1.6; font-size: 15px; }
+  .card { background: var(--card); border-radius: 24px; padding: 20px 16px; margin-bottom: 18px;
+    box-shadow: 0 6px 20px rgba(92,42,53,.07); }
+  .card h2 { margin: 0 0 6px; font-size: 19px; }
+  .sub { color: var(--soft); font-size: 14px; margin: 0 0 14px; line-height: 1.55; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hero button { background: none; border: 0; padding: 0; cursor: pointer; min-width: 0; -webkit-tap-highlight-color: transparent; }
+  svg { display: block; }
+  .hero svg, .grid svg { width: 100%; height: auto; }
+  .hint { text-align: center; font-size: 12px; color: var(--soft); margin: 6px 0 14px; }
+  .grid { display: grid; grid-template-columns: 44px repeat(5, minmax(0, 1fr)); gap: 4px; align-items: center; }
+  .grid .h { font-size: 11px; color: var(--soft); text-align: center; font-weight: 700; }
+  .grid .rowlabel { font-size: 12px; font-weight: 800; color: var(--soft); }
+  .details { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .details li { font-size: 14px; line-height: 1.5; background: var(--bg); border-radius: 12px; padding: 9px 12px; }
+  .details b { color: #c4466a; }
+  .beat { animation: beat .3s cubic-bezier(.2,.9,.3,1.3); transform-origin: 50% 60%; }
+  @keyframes beat { 40% { transform: scale(1.1); } 75% { transform: scale(.97); } }
+
+  /* 적용 예시 목업 */
+  .mock { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .mock { grid-template-columns: 1fr; } }
+  .phone { background: var(--bg); border-radius: 22px; padding: 14px; border: 1px solid var(--line); }
+  .phone .t { font-size: 12px; color: var(--soft); font-weight: 700; margin-bottom: 8px; }
+  .row { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 16px; padding: 8px 12px; margin-bottom: 8px; }
+  .row .n { font-weight: 800; }
+  .row .m { font-size: 12px; color: var(--soft); }
+  .row .b { margin-left: auto; font-weight: 900; font-size: 20px; text-align: right; }
+  .row .chip { display: block; font-size: 11px; font-weight: 800; border-radius: 99px; padding: 2px 8px; margin-top: 2px; }
+  .measure { text-align: center; }
+  .measure .num { font-size: 44px; font-weight: 900; letter-spacing: -1px; }
+  .measure .u { font-size: 12px; color: var(--soft); font-weight: 700; }
+  .measure svg { width: 82%; height: auto; margin: 0 auto; }
+  .ripple { animation: ripple .5s ease-out; transform-origin: 50% 55%; }
+  @keyframes ripple { from { transform: scale(1); opacity: .9; } to { transform: scale(1.25); opacity: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>콩닥 낙서 캐릭터</h1>
+  <p class="lead">
+    참고 이미지의 <b>손그림 선 스타일</b>을 시안 B(하트 주둥이)에 입혔어요. 캐릭터 자체는 콩닥용으로 새로 그렸어요.
+    몸은 개와 고양이 모두 같은 크림색이고, 상태는 <b>하트 주둥이와 뒤쪽 하트 배경의 파스텔 색</b>으로만 보여줘요.
+  </p>
+
+  <section class="card">
+    <h2>대표 포즈 · 빼꼼</h2>
+    <p class="sub">측정 화면에서는 테이블 위로 앞발을 올리고 빼꼼 내다보는 자세예요. 탭할 때마다 박동에 맞춰 콩 뛰어요.</p>
+    <div class="hero">
+      <button data-beat id="heroDog"></button>
+      <button data-beat id="heroCat"></button>
+    </div>
+    <div class="hint">탭해서 박동 확인</div>
+    <ul class="details">
+      <li><b>손그림 선</b> · 자주색 선 하나로, 굵기도 하나로 그렸어요. 선을 살짝 흔들어서 손으로 그린 느낌을 냈어요.</li>
+      <li><b>폐쇄성</b> · 개의 귀 안쪽 선과 고양이 귀의 안쪽 선은 끝을 닫지 않았어요. 그래도 귀 모양으로 완성돼 보여요.</li>
+      <li><b>전경-배경</b> · 하트 주둥이는 테두리 없이 색만으로 만든 면이에요. 선으로 그린 얼굴 위에서 하트가 떠올라 보여요.</li>
+      <li><b>근접성</b> · 점 눈을 넓고 낮게 두고 코를 하트 오목한 곳에 모았어요. 얼굴이 아래쪽으로 몰려서 아기 같은 비율이 돼요.</li>
+      <li><b>유사성</b> · 개와 고양이는 머리 크기, 눈, 하트 주둥이, 앞발이 모두 같아요. 귀, 무늬, 수염만 달라요.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>상태별 표정</h2>
+    <p class="sub">몸은 그대로 두고 표정, 작은 낙서 기호(z, 땀, 떨림선, ?), 하트 색만 바뀌어요.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="card">
+    <h2>적용 예시</h2>
+    <div class="mock">
+      <div class="phone">
+        <div class="t">환자 목록</div>
+        <div id="rows"></div>
+      </div>
+      <div class="phone measure">
+        <div class="t">측정 중</div>
+        <div class="num">132</div>
+        <div class="u">BPM · 정상 범위</div>
+        <button data-beat id="mockMeasure" style="background:none;border:0;padding:0;width:100%"></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const INK = '#5c2a35'
+const FUR = '#fff4e6'      // 개 · 고양이 공통 몸 색
+const PATCH = '#f3dcc3'    // 개 눈 얼룩 (같은 색 계열)
+const MOODS = [
+  { key: 'idle', label: '대기', muzzle: '#f6e3d3', halo: '#f7ece3' },
+  { key: 'happy', label: '정상', muzzle: '#ffc4d1', halo: '#ffe3ea' },
+  { key: 'sleepy', label: '서맥', muzzle: '#c3d6ff', halo: '#e2ebff' },
+  { key: 'stressed', label: '빈맥', muzzle: '#ffbcae', halo: '#ffe1da' },
+  { key: 'worried', label: '불규칙', muzzle: '#ffe08f', halo: '#fff1c9' },
+]
+const HEART = 'M100 175C40 135 20 100 20 72 20 45 42 28 66 28c16 0 28 9 34 22 6-13 18-22 34-22 24 0 46 17 46 44 0 28-20 63-80 103z'
+const mirror = (s) => `${s}<g transform="translate(200 0) scale(-1 1)">${s}</g>`
+const LINE = `stroke="${INK}" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"`
+let uid = 0
+
+/* ── 머리 · 귀 (살짝 비대칭인 손그림 곡선) ── */
+const DOG_HEAD = 'M101 38C141 37 165 63 164 103 163 142 136 168 99 167 63 167 36 141 37 102 38 63 61 39 101 38Z'
+const DOG_EAR = 'M66 47C45 35 19 46 15 80 12 108 25 129 42 127 55 125 58 109 57 92 56 74 59 59 68 50'
+const CAT_HEAD = 'M100 170C60 171 26 151 26 113 26 90 33 74 44 63 40 48 38 33 43 25 47 19 54 21 61 28L80 47C93 43 108 43 121 48L140 28C146 21 153 19 157 25 162 33 160 48 156 63 167 74 175 90 174 113 174 151 140 169 100 170Z'
+
+function eyes(mood) {
+  const L = 74, R = 126, y = 98
+  switch (mood) {
+    case 'happy': return `<path d="M${L-8} ${y+2}q8-10 16 0M${R-8} ${y+2}q8-10 16 0" fill="none" ${LINE}/>`
+    case 'sleepy': return `<path d="M${L-8} ${y-1}q8 7 16 0M${R-8} ${y-1}q8 7 16 0" fill="none" ${LINE}/>`
+    case 'stressed': return `<circle cx="${L}" cy="${y}" r="6.5" fill="${INK}"/><circle cx="${R}" cy="${y}" r="6.5" fill="${INK}"/>
+      <circle cx="${L+2}" cy="${y-2}" r="2" fill="#fff"/><circle cx="${R+2}" cy="${y-2}" r="2" fill="#fff"/>`
+    case 'worried': return `<circle cx="${L}" cy="${y}" r="5" fill="${INK}"/><circle cx="${R}" cy="${y}" r="5" fill="${INK}"/>
+      <path d="M${L-9} ${y-15}q8-1 14 4M${R+9} ${y-15}q-8-1-14 4" fill="none" ${LINE} stroke-width="4.5"/>`
+    default: return `<circle cx="${L}" cy="${y}" r="5.5" fill="${INK}"/><circle cx="${R}" cy="${y}" r="5.5" fill="${INK}"/>`
+  }
+}
+
+function mouth(mood, species) {
+  const s = `fill="none" ${LINE} stroke-width="4.5"`
+  switch (mood) {
+    case 'happy': {
+      const tongue = species === 'dog'
+        ? `<path d="M95 131q0 10 5 10t5-10" fill="#ff8ca0" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>`
+        : ''
+      return `${tongue}<path d="M89 127q5.5 6 11 0q5.5 6 11 0" ${s}/>`
+    }
+    case 'sleepy': return `<ellipse cx="100" cy="132" rx="3.2" ry="4" fill="${INK}"/>`
+    case 'stressed': return `<path d="M88 133q3-4 6 0t6 0 6 0 6 0" ${s}/>`
+    case 'worried': return `<path d="M92 134q8-5 16 0" ${s}/>`
+    default: return `<path d="M91 127q4.5 5 9 0q4.5 5 9 0" ${s}/>`
+  }
+}
+
+const NOSE = `<path d="M92 111q8-4 16 0-2 7-8 9-6-2-8-9z" fill="${INK}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`
+
+/* 낙서 기호 (만화 기호처럼 상태를 보조) */
+function marks(mood) {
+  switch (mood) {
+    case 'happy': return mirror(`<path d="M50 118l5-6M58 120l5-6" fill="none" stroke="#f28aa0" stroke-width="3.5" stroke-linecap="round"/>`)
+    case 'sleepy': return `<path d="M152 34h11l-11 12h11M170 18h8l-8 9h8" fill="none" ${LINE} stroke-width="4"/>`
+    case 'stressed': return `<path d="M100 20v-10M66 28l-6-8M134 28l6-8" fill="none" ${LINE} stroke-width="4.5"/>
+      <path d="M172 62c5 8 7 12 7 15a7 7 0 0 1-14 0c0-3 2-7 7-15z" fill="#bfe6ff" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>`
+    case 'worried': return `<path d="M160 30q2-10 11-9 9 2 7 10-2 6-8 8v5M170 56v.5" fill="none" ${LINE} stroke-width="4.5"/>`
+    default: return ''
+  }
+}
+
+function dogFace(mood) {
+  const earDrop = mood === 'sleepy' ? 'translate(0 6)' : ''
+  return `
+    <path d="${DOG_HEAD}" fill="${FUR}" ${LINE}/>
+    <path d="M114 84C124 76 142 82 140 98 138 111 121 113 115 103 111 96 110 88 114 84Z" fill="${PATCH}"/>
+    <g transform="${earDrop}">${mirror(`<path d="${DOG_EAR}" fill="${FUR}" ${LINE}/>`)}</g>`
+}
+
+function catFace(mood) {
+  return `
+    <path d="${CAT_HEAD}" fill="${FUR}" ${LINE}/>
+    ${mirror(`<path d="M50 38l7 15" fill="none" ${LINE} stroke-width="4.5"/>`)}
+    <path d="M91 57l2 10M100 55v11M109 57l-2 10" fill="none" ${LINE} stroke-width="4.5"/>
+`
+}
+
+function whiskers() {
+  return mirror(`<path d="M66 123l-24-5M66 131l-24 2" fill="none" ${LINE} stroke-width="3.5"/>`)
+}
+
+function paws() {
+  const paw = `<path d="M54 178C52 162 60 153 72 153 84 153 91 161 89 178" fill="${FUR}" ${LINE}/>
+    <path d="M67 171v6M76 171v6" fill="none" ${LINE} stroke-width="4"/>`
+  return mirror(paw) + `<path d="M8 178H192" fill="none" ${LINE}/>`
+}
+
+/**
+ * species: dog | cat, mood, opts: { peek: 앞발 포즈, halo: 뒤쪽 하트 배경, wobble: 손그림 흔들림(큰 크기 전용) }
+ */
+function character(species, mood, { peek = false, halo = true, wobble = peek } = {}) {
+  const m = MOODS.find(x => x.key === mood)
+  const id = `wob${uid++}`
+  const face = species === 'dog' ? dogFace(mood) : catFace(mood)
+  return `
+    <defs>
+      <filter id="${id}" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="4"/>
+        <feDisplacementMap in="SourceGraphic" scale="3.5"/>
+      </filter>
+    </defs>
+    ${halo ? `<path class="halo" d="${HEART}" transform="translate(-16 -14) scale(1.16)" fill="${m.halo}"/>` : ''}
+    <g ${wobble ? `filter="url(#${id})"` : ''}>
+      ${face}
+      <path d="${HEART}" transform="translate(60 93) scale(.4)" fill="${m.muzzle}"/>
+      ${species === 'cat' ? whiskers() : ''}
+      ${eyes(mood)}${NOSE}${mouth(mood, species)}
+      ${marks(mood)}
+      ${peek ? paws() : ''}
+    </g>`
+}
+
+const svg = (inner, size) =>
+  `<svg viewBox="-12 -6 224 196" width="${size}" height="${Math.round(size * 196 / 224)}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">${inner}</svg>`
+
+document.getElementById('heroDog').innerHTML = svg(character('dog', 'happy', { peek: true }), 240)
+document.getElementById('heroCat').innerHTML = svg(character('cat', 'happy', { peek: true }), 240)
+
+document.getElementById('grid').innerHTML =
+  `<div></div>${MOODS.map(m => `<div class="h">${m.label}</div>`).join('')}` +
+  `<div class="rowlabel">개</div>${MOODS.map(m => `<div>${svg(character('dog', m.key), 120)}</div>`).join('')}` +
+  `<div class="rowlabel">고양이</div>${MOODS.map(m => `<div>${svg(character('cat', m.key), 120)}</div>`).join('')}`
+
+const ROWS = [
+  ['콩이', '개 · 초소형견 · 7세', 'dog', 'happy', 108, '정상', '#e3f6ee', '#2f9d74'],
+  ['나비', '고양이 · 11세', 'cat', 'stressed', 256, '빈맥', '#ffe1da', '#d9503f'],
+  ['보리', '개 · 초대형견 · 8세', 'dog', 'sleepy', 44, '서맥', '#e2ebff', '#4a74d9'],
+  ['치즈', '고양이 · 3세', 'cat', 'worried', 196, '불규칙', '#fff1c9', '#b7790a'],
+]
+document.getElementById('rows').innerHTML = ROWS.map(([n, s, sp, mood, b, label, bg, fg]) => `
+  <div class="row">${svg(character(sp, mood), 48)}
+    <div><div class="n">${n}</div><div class="m">${s}</div></div>
+    <div class="b">${b}<span class="chip" style="background:${bg};color:${fg}">${label}</span></div>
+  </div>`).join('')
+document.getElementById('mockMeasure').innerHTML = svg(character('dog', 'happy', { peek: true }), 220)
+
+document.querySelectorAll('[data-beat]').forEach(b => b.addEventListener('pointerdown', () => {
+  const s = b.querySelector('svg')
+  s.classList.remove('beat'); void s.getBoundingClientRect(); s.classList.add('beat')
+  const h = s.querySelector('.halo')
+  if (h) { const c = h.cloneNode(); c.classList.add('ripple'); h.after(c); setTimeout(() => c.remove(), 500) }
+}))
+</script>
+</body>
+</html>
